@@ -93,3 +93,13 @@ Route::get('/run-migrations', function () {
     \Artisan::call('migrate', ['--force' => true]);
     return 'Migrations run!';
 });
+
+// Debug route to check database connection and app status
+Route::get('/debug', function () {
+    try {
+        \DB::connection()->getPdo();
+        return 'Database connected! App is working!';
+    } catch (\Exception $e) {
+        return 'Database error: ' . $e->getMessage();
+    }
+});
