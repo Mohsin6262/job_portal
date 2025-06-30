@@ -8,6 +8,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 // Test route to confirm deployment
 Route::get('/test-deploy', function () {

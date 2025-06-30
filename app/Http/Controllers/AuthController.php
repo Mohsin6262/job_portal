@@ -23,11 +23,20 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         $user = User::where('Email', $credentials['email'])->first();
 
-        if ($user && Hash::check($credentials['password'], $user->Password)) {
-            Session::put('user', $user);
-            return redirect()->route('dashboard');
+        if ($user) {
+            // Try bcrypt check first
+            $valid = false;
+            try {
+                $valid = \Illuminate\Support\Facades\Hash::check($credentials['password'], $user->Password);
+            } catch (\RuntimeException $e) {
+                // If not bcrypt, fallback to plain text comparison
+                $valid = $credentials['password'] === $user->Password;
+            }
+            if ($valid) {
+                Session::put('user', $user);
+                return redirect()->route('dashboard');
+            }
         }
-
         return back()->withErrors(['Invalid email or password']);
     }
 
